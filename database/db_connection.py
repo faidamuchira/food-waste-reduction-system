@@ -15,10 +15,10 @@ def get_server_connection():
         password=os.getenv("DB_PASSWORD")   
     )
     
-if __name__ == "__main__":
+"""if __name__ == "__main__":
     connection = get_server_connection()
     
     if connection.is_connected():
         print("Connected successfully!")
         
-        connection.close()
+        connection.close()"""
