@@ -30,8 +30,37 @@ try:
     
     cursor.execute(users_table_query)
     
-    print("Users table created successfully")
+    # print("Users table created successfully")
     
+    # The food_listings table stores surplus food posted by businesses.
+    # Customers can browse and reserve these listings before they are discarded.
+    food_listings_query = """
+    CREATE TABLE IF NOT EXISTS food_listings(
+        -- Unique identifier for each listing
+        listing_id INT AUTO_INCREMENT PRIMARY KEY,
+        
+        -- Links the listing to the business that created it
+        business_id INT NOT NULL,
+        
+        food_name VARCHAR(255) NOT NULL,
+        description TEXT,
+        price DECIMAL(10, 2),
+        quantity INT NOT NULL,
+        
+        -- Deadline for reserving or collecting the food
+        available_until DATETIME,
+        
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        
+         -- Relationship between food listings and businesses
+        FOREIGN KEY (business_id) REFERENCES users(user_id)
+    )
+    
+    """
+    
+    cursor.execute(food_listings_query)
+    
+    print("Food listings table created successfully")
 
 except Exception as e:
     print("Error:", e)
