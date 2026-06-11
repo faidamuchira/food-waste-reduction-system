@@ -9,7 +9,7 @@ try:
      # create cursor object to execute sql statements
     cursor = connection.cursor()
     
-    #create database command
+    # execute SQL statement to create the database
     cursor.execute(
     "CREATE DATABASE IF NOT EXISTS food_waste_db"
     )
@@ -19,6 +19,9 @@ except Exception as e:
     print("Error:", e)
 
 finally:
+    if 'cursor' in locals():
+        cursor.close()
+        
     if 'connection' in locals() and connection.is_connected():
         connection.close()
         print("Connection closed.")

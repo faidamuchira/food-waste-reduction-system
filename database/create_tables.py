@@ -44,8 +44,15 @@ try:
         
         food_name VARCHAR(255) NOT NULL,
         description TEXT,
-        price DECIMAL(10, 2),
+        price DECIMAL(10, 2) NOT null,
         quantity INT NOT NULL,
+        
+         -- Address where customers collect the food
+        pickup_address VARCHAR(255),
+                   
+        -- Coordinates obtained from Google Maps API
+        latitude DECIMAL(10,8),
+        longitude DECIMAL(11,8),
         
         -- Deadline for reserving or collecting the food
         available_until DATETIME,
@@ -60,12 +67,62 @@ try:
     
     cursor.execute(food_listings_query)
     
-    print("Food listings table created successfully")
+    # print("Food listings table created successfully")
+    
+    # cursor.execute("""
+                   
+                 #  ALTER TABLE food_listings
+                  # -- Address where customers collect the food
+                  # ADD pickup_address VARCHAR(255),
+                   
+                  # -- Coordinates obtained from Google Maps API
+                  # ADD latitude DECIMAL(10,8),
+                  # ADD longitude DECIMAL(11,8)
+                   #""")
+    # print("Food listings table altered successfully")
+    
+    # Store reservations by customers for available food listings
+    reservations_table_query = """
+    CREATE TABLE IF NOT EXISTS reservations(
+        -- Unique identifier for each reservation
+        reservation_id INT AUTO_INCREMENT PRIMARY KEY,
+        
+        -- customer who made the reservation
+        customer_id INT NOT NULL,
+        
+        -- Food listing being reserved
+        listing_id INT NOT NULL,
+        
+        -- Number of items reserved
+        quantity_reserved INT NOT NULL,
+        
+        -- Track the current state of the reservation
+        status ENUM('pending', 'collected', 'cancelled') NOT NULL,
+        
+        -- record the time of reservation
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        
+        -- Relationship between reservations and customers
+        FOREIGN KEY (customer_id) REFERENCES users(user_id),
+        
+        -- Relationship bwteen reservation and food listings
+        FOREIGN KEY (listing_id) REFERENCES food_listings(listing_id)
+    )
+    """
+    cursor.execute(reservations_table_query)
+    
+    connection.commit()
+    
+    print("All tables created successfully")
+    
 
 except Exception as e:
     print("Error:", e)
 
 finally:
+    if 'cursor' in locals():
+        cursor.close()
+        
     if 'connection' in locals() and connection.is_connected():
         connection.close()
         print("Connection closed.")
