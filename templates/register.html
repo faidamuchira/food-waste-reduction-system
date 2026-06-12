@@ -70,6 +70,20 @@
                 font-weight: bold;
                 cursor: pointer;
             }
+            .switch-page {
+                text-align: center;
+                margin-top: 25px;
+                font-size: 14px;
+                color: #7f8c8d;
+            }
+            .switch-page a {
+                color: #2ecc71;
+                text-decoration: none;
+                font-weight: bold;
+            }
+            .switch-page a:hover{
+                text-decoration: underline;
+            }
             /* Hover: Visual feedback when user hovers over the button */
             button:hover {
             background-color: #27ae60;
@@ -84,21 +98,25 @@
             <h2>Food Wise</h2>
             <form>
                 <label>Full Name</label>
-                <input type="text">
+                <input type="text" placeholder="Enter your name" required>
                 <br>
 
                 <label>Email</label>
-                <input type="email">
+                <input type="email" placeholder="Enter your email" required>
                 <br>
 
                 <label>Password</label>
-                <input type="password">
+                <input type="password" placeholder="Enter your password" required>
                 <br>
                 
                 <input type="checkbox">Remember Me
                 <br>
         
                 <button type="Submit">Sign Up</button>
+
+                <div class="switch-page">
+                    Already have an account? <a href="login.html">Log In here</a>
+                </div>
 
             </form>
         </div>
