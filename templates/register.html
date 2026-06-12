@@ -1,0 +1,107 @@
+<!DOCTYPE html> 
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Sign Up - Food Waste Reduction</title>
+
+        <style>
+            /*Base Page Styling: Centers the signup card vertically and horizontally on any screen*/
+            body {
+                background-color: #f4f7f6 ;
+                font-family: Arial, Helvetica, sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+            }
+
+            /* Box Styling: Creates the floating card layout for the form content */
+            .box{
+                background-color: #ffffff;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                width: 350px;
+            }
+            h2{
+                color: #2c3e50;
+                text-align: center;
+                margin-top: 0;
+                margin-bottom: 25px;
+                font-size: 28px;
+            }
+
+            /* Label Styling: Forces labels onto their own line above the input fields */
+            label{
+                display:block;
+                color: hwb(180 35% 60%);
+                font-size: 12px;
+                font-weight: bold;
+                text-transform: uppercase;
+                margin-bottom: 8px;
+            }
+            /* Form Fields: Styles text, email, and password inputs uniformly */
+            input[type="text"], input[type="email"], input[type="password"]{
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 20px;
+                border: 1px solid #dcdde1;
+                border-radius: 6px;
+                box-sizing: border-box;
+                font-size: 14px;
+            }
+            /* Checkbox Styling: Overrides the 100% width of text fields to keep the box standard size */
+            input[type="checkbox"] {
+                width: auto;
+                margin-right: 8px;
+                margin-bottom: 25px;
+                cursor: pointer;
+            }
+            /* Submit Button Styling: Custom interactive theme button */
+            button {
+                width: 100%;
+                background-color: #2ecc71;
+                color: white;
+                padding: 12px;
+                border: none;
+                border-radius: 6px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+            /* Hover: Visual feedback when user hovers over the button */
+            button:hover {
+            background-color: #27ae60;
+            }
+            
+        </style>
+
+    </head>
+
+    <body>
+        <div class="box">
+            <h2>Food Wise</h2>
+            <form>
+                <label>Full Name</label>
+                <input type="text">
+                <br>
+
+                <label>Email</label>
+                <input type="email">
+                <br>
+
+                <label>Password</label>
+                <input type="password">
+                <br>
+                
+                <input type="checkbox">Remember Me
+                <br>
+        
+                <button type="Submit">Sign Up</button>
+
+            </form>
+        </div>
+    </body>
+
+</html>
