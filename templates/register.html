@@ -96,20 +96,23 @@
     <body>
         <div class="box">
             <h2>Food Wise</h2>
-            <form>
+            <form action="/sign-up" method="POST">
                 <label>Full Name</label>
-                <input type="text" placeholder="Enter your name" required>
-                <br>
+                <input type="text" name="full_name" placeholder="Enter your name" required>
 
                 <label>Email</label>
-                <input type="email" placeholder="Enter your email" required>
-                <br>
+                <input type="email" name="email" placeholder="Enter your email" required>
 
                 <label>Password</label>
-                <input type="password" placeholder="Enter your password" required>
-                <br>
+                <input type="password" name="password" placeholder="Enter your password" required>
+
+                <label>I want to join as a:</label>
+                <select name="role" required>
+                    <option value="customer">Customer (Buy Food)</option>
+                    <option value="business">Business (List Food)</option>
+                </select>
                 
-                <input type="checkbox">Remember Me
+                <input type="checkbox" name="remember_me">Remember Me
                 <br>
         
                 <button type="Submit">Sign Up</button>
