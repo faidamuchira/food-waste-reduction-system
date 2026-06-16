@@ -24,7 +24,7 @@ def sign_up(full_name, email, password, role):
     if len(password) < 8:
         return "ERROR: Password must be at least 8 characters long"
     
-    #check for atlist one number
+    #check for at least one number
     is_number = False
     for char in password:
         if char.isdigit():
@@ -65,7 +65,7 @@ def log_in(email, password):
     if hash_function(password) == stored_hash:
         #reset attempt back to 0 on successful login
         user_data["attempts"] = 0
-        return f"SUCCESSFUL: Logg in! Loading the {role} dashboard."
+        return f"SUCCESSFUL: Logged in! Loading the {role} dashboard."
     else:
         #if wrong password increase faoled attempts by 1
         user_data["attempts"] = user_data["attempts"] + 1
