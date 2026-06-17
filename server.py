@@ -1,8 +1,3 @@
-# --- Team Introduction ---
-# Name: Adnya Shinde
-# Hobby: Crafting and Painting
-# It allows me to be creative, work with my hands, and bring beautiful ideas to life.
-
 from flask import Flask, render_template, request, redirect, url_for
 # This imports exact sign_up and log_in functions
 from authentication import sign_up, log_in
