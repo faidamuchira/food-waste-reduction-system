@@ -1,6 +1,16 @@
-my_database = {}
+import mysql.connector
 
-#==================== Hash Function ===================
+def get_db_connection():
+    """Establishes and returns a live connection to the MySQL database server."""
+    return mysql.connector.connect(
+        host="localhost",
+        user="root",                 
+        password="password123",      
+        database="food_waste_db"     
+    )
+
+
+#==================== HASH FUNCTION ===================
 def hash_function(password: str) -> str:
     #convert plain text password into a unique numeric fingerprint string.
     hash_value = 0
@@ -13,18 +23,14 @@ def hash_function(password: str) -> str:
     return str(hash_value)
 
 
-#==================== Registration ====================
+#==================== USER REGISTRATION ====================
 def sign_up(full_name, email, password, role):
-    #check if email is already taken
-    if email in my_database:
-        return "ERROR: This Email is already registered!"
-    
     #strong password validation
-    #check length
+    #check minimum password string length
     if len(password) < 8:
         return "ERROR: Password must be at least 8 characters long"
     
-    #check for at least one number
+    #check for at least one digit involved in password
     is_number = False
     for char in password:
         if char.isdigit():
@@ -33,48 +39,94 @@ def sign_up(full_name, email, password, role):
     if not is_number:
         return "ERROR: Password must contain at least one number"
     
-    #Scramble the plain text password using our custom match function
+    #Scramble the plain text password using our custom rolling function
     scrambled_password = hash_function(password)
         
-    #save the everything including an 'attempt' tracker set to 0 
-    my_database[email] = {
-        "full_name": full_name,
-        "password_hash": scrambled_password, #store safely as a hash fingerprint
-        "role": role,
-        "attempts": 0  #start at 0 failed attempts
-    }
-    return "SUCCESS: Account created successfully"
+    # Intialize the databse connection pipes 
+    connection = get_db_connection()
+    cursor = connection.cursor()
 
-#====================== Login =========================
+    try:
+        # SQL Command Construction:
+        # The '%s' markers act as secure data placeholders. 
+        # We explicitly map the tracking number 0 into the hidden 'attempts' column.
+        query = """
+            INSERT INTO users (full_name, email, password_hash, role, attempts) 
+            VALUES (%s, %s, %s, %s, %s)
+        """
+        values = (full_name, email, scrambled_password, role, 0)
+
+        # Run the command and issue a database commit to permanently finalize the row
+        cursor.execute(query, values)
+        connection.commit() # Permanently writes the user profile to your database rows
+        return "SUCCESS: Account created successfully"
+
+    except mysql.connector.Error as err:
+        # MySQL Error 1062 represents a duplicate entry violation for UNIQUE columns
+        if err.errno == 1062:
+            return "ERROR: This Email is already registered!"
+        
+        #General backup response for unexpected database server faults
+        return f"ERROR: Database error: {err.msg}"
+
+    finally:
+        #Safely close database connections to prevent memory resource leaks
+        cursor.close()
+        connection.close()
+
+#====================== USER LOGIN =========================
 def log_in(email, password):
-    #check if email exists
-    if email not in my_database:
-        return "ERROR: Email not found!"
-    
-    #get the data from database
-    user_data = my_database[email]
-    
-    #check if account lock out
-    if user_data["attempts"] >= 3:
-        return "ERROR: Too many attempts. Account is locked!"
-    
-    stored_hash = user_data["password_hash"]
-    role = user_data["role"]
+    connection = get_db_connection()
+    # dictionary=True converts raw tuple rows into easy-to-read Python dictionaries
+    cursor = connection.cursor(dictionary=True)
 
-    #check if the password matches the store pasword exactly
-    if hash_function(password) == stored_hash:
-        #reset attempt back to 0 on successful login
-        user_data["attempts"] = 0
-        return f"SUCCESSFUL: Logged in! Loading the {role} dashboard."
-    else:
-        #if wrong password increase faoled attempts by 1
-        user_data["attempts"] = user_data["attempts"] + 1
-        remaining_attempts = 3 - user_data["attempts"]
+    try:
+        # Query data safely using placeholder substitution to prevent SQL injection vulnerabilities
+        query = "SELECT * FROM users WHERE email = %s"
+        cursor.execute(query, (email,))
+        user_data = cursor.fetchone()
 
+        # Check if user record row was found
+        if not user_data:
+            return "ERROR: Email not found!"
+
+        # Check if the account lockout flag is active
         if user_data["attempts"] >= 3:
-            return "ERROR: Wrong Password. Account is now locked!"
+            return "ERROR: Too many attempts. Account is locked!"
+
+        # Extract parameters from the verified data mapping row
+        stored_hash = user_data["password_hash"]
+        role = user_data["role"]
+
+        # Verify match against our custom polynomial fingerprint
+        if hash_function(password) == stored_hash:
+            # Reset consecutive failed attempts back to zero on clear authorization
+            reset_query = "UPDATE users SET attempts = 0 WHERE email = %s"
+            cursor.execute(reset_query, (email,))
+            connection.commit()
+            return f"SUCCESSFUL: Logged in! Loading the {role} dashboard."
         else:
-            return f"ERROR: Wrong Password. You have {remaining_attempts} attempts remaining."
+            # Increment tracking index counter in the user data row
+            new_attempts = user_data["attempts"] + 1
+            update_query = "UPDATE users SET attempts = %s WHERE email = %s"
+            cursor.execute(update_query, (new_attempts, email))
+            connection.commit()
+
+            remaining_attempts = 3 - new_attempts
+
+            if new_attempts >= 3:
+                return "ERROR: Wrong Password. Account is locked!"
+            else:
+                return f"ERROR: Wrong Password. You have {remaining_attempts} attempts remaining."
+
+    except mysql.connector.Error as err:
+        return f"ERROR: Database connection error: {err.msg}"
+
+    finally:
+        #Close database operational objects
+        cursor.close()
+        connection.close()
+    
 
     
  
