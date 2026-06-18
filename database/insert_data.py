@@ -6,31 +6,33 @@ try:
     if connection.is_connected():
         print("Connected to the DB successfully.")
         
-    cursor = connection.cursor()
+    cursor = connection.cursor(buffered=True)
     
     # Insert business user
     business_query = """
     INSERT INTO users(
-        full_name, email, password_hash,role
+        full_name, email, password_hash, role, attempts
     )
     VALUES
     (
         'Fresh Bakery',
         'bakery@email.com',
         'hashed_password',
-        'business'    
+        'business',
+        0    
     )"""
     cursor.execute(business_query)
 
     #insert customer user
     customer_query = """
     INSERT INTO users
-    (full_name, email, password_hash, role)
+    (full_name, email, password_hash, role, attempts)
     VALUES
     ('Faith Muchira',
     'faith@gmail.com',
     'hashed_password',
-    'customer'
+    'customer',
+    0
     )
     """
     

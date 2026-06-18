@@ -22,9 +22,12 @@ try:
         
         -- Restrict role values to valid user types
         role ENUM ('business', 'customer') NOT NULL,
+        attempts INT DEFAULT 0,
         
         -- Automatically records when the account was created 
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+
+        
     )
     """
     

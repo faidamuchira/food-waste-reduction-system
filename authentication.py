@@ -1,13 +1,5 @@
 import mysql.connector
-
-def get_db_connection():
-    """Establishes and returns a live connection to the MySQL database server."""
-    return mysql.connector.connect(
-        host="localhost",
-        user="root",                 
-        password="password123",      
-        database="food_waste_db"     
-    )
+from database.db_connection import get_db_connection
 
 
 #==================== HASH FUNCTION ===================
@@ -28,7 +20,7 @@ def sign_up(full_name, email, password, role):
     #strong password validation
     #check minimum password string length
     if len(password) < 8:
-        return "ERROR: Password must be at least 8 characters long"
+        return False, "ERROR: Password must be at least 8 characters long"
     
     #check for at least one digit involved in password
     is_number = False
@@ -37,7 +29,7 @@ def sign_up(full_name, email, password, role):
             is_number = True
     
     if not is_number:
-        return "ERROR: Password must contain at least one number"
+        return False, "ERROR: Password must contain at least one number"
     
     #Scramble the plain text password using our custom rolling function
     scrambled_password = hash_function(password)
@@ -59,15 +51,15 @@ def sign_up(full_name, email, password, role):
         # Run the command and issue a database commit to permanently finalize the row
         cursor.execute(query, values)
         connection.commit() # Permanently writes the user profile to your database rows
-        return "SUCCESS: Account created successfully"
+        return True, "SUCCESS: Account created successfully"
 
     except mysql.connector.Error as err:
         # MySQL Error 1062 represents a duplicate entry violation for UNIQUE columns
         if err.errno == 1062:
-            return "ERROR: This Email is already registered!"
+            return False, "ERROR: This Email is already registered!"
         
         #General backup response for unexpected database server faults
-        return f"ERROR: Database error: {err.msg}"
+        return False,  f"ERROR: Database error: {err.msg}"
 
     finally:
         #Safely close database connections to prevent memory resource leaks
@@ -88,11 +80,11 @@ def log_in(email, password):
 
         # Check if user record row was found
         if not user_data:
-            return "ERROR: Email not found!"
+            return False, "ERROR: Email not found!", None
 
         # Check if the account lockout flag is active
         if user_data["attempts"] >= 3:
-            return "ERROR: Too many attempts. Account is locked!"
+            return False, "ERROR: Too many attempts. Account is locked!", None
 
         # Extract parameters from the verified data mapping row
         stored_hash = user_data["password_hash"]
@@ -104,7 +96,7 @@ def log_in(email, password):
             reset_query = "UPDATE users SET attempts = 0 WHERE email = %s"
             cursor.execute(reset_query, (email,))
             connection.commit()
-            return f"SUCCESSFUL: Logged in! Loading the {role} dashboard."
+            return True, f"SUCCESSFUL: Logged in!", user_data
         else:
             # Increment tracking index counter in the user data row
             new_attempts = user_data["attempts"] + 1
@@ -115,12 +107,12 @@ def log_in(email, password):
             remaining_attempts = 3 - new_attempts
 
             if new_attempts >= 3:
-                return "ERROR: Wrong Password. Account is locked!"
+                return False, "ERROR: Wrong Password. Account is locked!", None 
             else:
-                return f"ERROR: Wrong Password. You have {remaining_attempts} attempts remaining."
+                return False, f"ERROR: Wrong Password. You have {remaining_attempts} attempts remaining.", None
 
     except mysql.connector.Error as err:
-        return f"ERROR: Database connection error: {err.msg}"
+        return False, f"ERROR: Database connection error: {err.msg}", None
 
     finally:
         #Close database operational objects
