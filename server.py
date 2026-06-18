@@ -20,12 +20,12 @@ def register():
         role = request.form.get('role')
         
         # This calls function
-        result = sign_up(name, email, password, role)
+        success, message = sign_up(name, email, password, role)
         
-        if "SUCCESS" in result:
+        if success:
             return redirect(url_for('login'))  # Sends them to the login page
         else:
-            return f"Registration Failed: {result}"  # Displays validation error
+            return f"Registration Failed: {message}"  # Displays validation error
             
     return render_template('register.html')
 
@@ -39,12 +39,14 @@ def login():
         password = request.form.get('password')
         
         # This calls function
-        result = log_in(email, password)
+        success, message, user_data = log_in(email, password)
         
-        if "SUCCESSFUL" in result:
-            return f"Welcome! {result}"  # Late user will redirect to the dashboard here
+        if success:
+            user_role = user_data['role']
+            user_id = user_data['user_id']
+            return f"Welcome! Logged in as user ID {user_id} with the role: {user_role} dashboard."  # Late user will redirect to the dashboard here
         else:
-            return f"Login Failed: {result}"  # Displays "Wrong Password" or "Locked"
+            return f"Login Failed: {message}"  # Displays "Wrong Password" or "Locked"
             
     return render_template('login.html')
 
