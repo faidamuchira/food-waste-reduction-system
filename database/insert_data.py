@@ -53,7 +53,7 @@ try:
                 """)
     customer_id = cursor.fetchone()[0]
     
-    # insert food listing
+    # insert multiple food listings
     food_listing_query = """
     INSERT INTO food_listings
     (
@@ -62,22 +62,30 @@ try:
         description,
         price,
         quantity,
-        pickup_address
+        pickup_address,
+        latitude,
+        longitude
     )
     VALUES
-    (%s, %s, %s, %s, %s, %s)
+    (%s, %s, %s, %s, %s, %s, %s, %s)
     """
 
-    food_listing_values = (
-        business_id,
-        "Bread Loaf",
-        "Fresh bread from today",
-        2.50,
-        10,
-        "12 Main Street, Dublin"
-    )
+    food_listing_values = [
+        # Dublin 
+        (business_id, "Bread Loaf", "Fresh bread from today", 2.50, 10, "12 Main Street, Dublin", 53.349805, -6.260310),
+        # London
+        (business_id, "Surplus Pastry Box", "Croissants and muffins.", 3.50, 5, "15 Baker St, London", 51.5236, -0.1585),
+        # Manchester
+        (business_id, "Organic Veggie Bundle", "Carrots, potatoes, and onions.", 2.00, 10, "42 Northern Quarter, Manchester", 53.4830, -2.2355),
+        # Edinburgh
+        (business_id, "End of Day Sandwiches", "Meat and vegetarian sandwiches.", 1.50, 8, "8 Royal Mile, Edinburgh", 55.9500, -3.1900),
+        # Cardiff
+        (business_id, "Bagel Batch", "Plain and sesame bagels.", 2.50, 3, "12 Castle Arcade, Cardiff", 51.4800, -3.1790),
+        # Belfast
+        (business_id, "Mixed Dairy Box", "Milk, butter, and yogurt.", 4.00, 4, "9 Titanic Quarter, Belfast", 54.6040, -5.9080)
+    ]
 
-    cursor.execute(
+    cursor.executemany(
         food_listing_query,
         food_listing_values
     )

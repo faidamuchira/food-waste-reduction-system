@@ -9,11 +9,11 @@ try:
      # create cursor object to execute sql statements
     cursor = connection.cursor()
     
-    # execute SQL statement to create the database
-    cursor.execute(
-    "CREATE DATABASE IF NOT EXISTS food_waste_db"
-    )
-    print("Database created successfully!")
+   # execute SQL statement to completely reset the database
+    cursor.execute("DROP DATABASE IF EXISTS food_waste_db")
+    cursor.execute("CREATE DATABASE food_waste_db")
+    
+    print("Database reset and created successfully!")
 
 except Exception as e:
     print("Error:", e)
