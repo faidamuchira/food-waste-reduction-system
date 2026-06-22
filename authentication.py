@@ -6,6 +6,8 @@ from database.db_connection import get_db_connection
 def hash_function(password: str) -> str:
     #convert plain text password into a unique numeric fingerprint string.
     hash_value = 0
+    # Use a prime number multiplier to scramble the letter positions 
+    # (This ensures "cats" and "tacs" don't get the same hash number)
     prime_multiplier = 31 
     modulus = 10**9 + 7
 
