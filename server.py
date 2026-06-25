@@ -1,9 +1,13 @@
-from flask import Flask, flash, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from backend.food_list import add_food_item, view_food_items, update_items, delete_item
 # This imports exact sign_up and log_in functions
 from authentication import sign_up, log_in
 from database.db_connection import get_db_connection
 
 app = Flask(__name__)
+
+# secret key so Flask can securely remember user roles
+app.secret_key = 'food_wise_secret_session_key'
 
 def get_user_by_id(user_id):
     """Look a user up by id. Returns the row (dict) or None.
@@ -27,7 +31,6 @@ NOTICES = {
     "not_customer": {"type": "error",   "text": "Only customer accounts can reserve meals."},
     "error":        {"type": "error",   "text": "Something went wrong. Please try again."},
 }
-
 
 @app.route('/')
 def home():
@@ -67,13 +70,22 @@ def login():
         success, message, user_data = log_in(email, password)
         
         if success:
-           # Send user straight to the map
-            return redirect(url_for('reservations')) 
+            #Save the user session details
+            session['user_id'] = user_data['user_id']
+            session['user_name'] = user_data['full_name']
+
+            #direct them based on their roles
+            if user_data['role'] == 'business':
+                return redirect(url_for('view_items'))
+            else:
+           # Send user straight to the map if they are customer
+                return redirect(url_for('reservations', user_id=user_data['user_id'])) 
         else:
             return f"Login Failed: {message}"  # Displays "Wrong Password" or "Locked"
             
     return render_template('login.html')
 
+#============================ CUSTOMER  MAP ====================================
 @app.route('/dashboard')
 def dashboard():
     connection = get_db_connection()
@@ -89,14 +101,13 @@ def dashboard():
         food_items = cursor.fetchall()
         
         # Pass the data to HTML map page
-        return render_template('feed.html', listings=food_items)
+        return render_template('reservations.html', listings=food_items)
         
     except Exception as e:
         return f"Database error: {e}"
     finally:
         cursor.close()
         connection.close()
-
 
 # ==========================  BROWSE & RESERVE MEALS ROUTE ==================================
 @app.route("/reservations")
@@ -188,6 +199,83 @@ def reserve():
         cursor.close()
         conn.close()
 
+#============================= BUSINESS ROUTE =================================
+
+@app.route('/view_items')
+def view_items():
+        return render_template("dashbord_business.html") ###
+
+   
+@app.route('/api/listings')
+def api_listings():
+        business_id = session.get('user_id', 1)
+        items = view_food_items(business_id)
+        return jsonify(items)
+    
+@app.route('/add_items', methods= ['GET' , 'POST'])
+def add_items():
+
+        business_id = session.get('user_id', 1)
+        if request.method== 'POST':
+            food_name = request.form.get("food_name") 
+            price = request.form.get("price") 
+            quantity = request.form.get("quantity") 
+            description = request.form.get("description") 
+            pickup_address = request.form.get("pickup_address")
+            latitude = request.form.get("latitude") or None
+            longitude = request.form.get("longitude") or None
+            available_until = request.form.get("available_until") or None
+
+            add_food_item( 
+                business_id, 
+                food_name,
+                price, 
+                quantity, 
+                description, 
+                pickup_address,
+                latitude,
+                longitude,
+                available_until )
+            
+        return redirect ("/view_items")
+    
+@app.route ("/delete-items/<int:listing_id>")
+def delete_items_list(listing_id):
+        business_id = session.get('user_id', 1)
+        delete_item(
+            listing_id,
+            business_id
+        )
+        return redirect ("/view_items")
+
+@app.route("/update-items/<int:listing_id>", methods=["GET", "POST"])
+def update_items_list(listing_id):
+    print("UPDATE CLICKED")
+    business_id = session.get('user_id', 1)  # Tracks the real logged-in business
+    
+    # 1. If the user clicks "Save" inside the edit form, process the changes
+    if request.method == "POST":
+        print("POST RECEIVED")
+        food_name = request.form.get("food_name") 
+        price = request.form.get("price") 
+        quantity = request.form.get("quantity") 
+        description = request.form.get("description") 
+        pickup_address = request.form.get("pickup_address")
+        
+        update_items(
+            listing_id,
+            business_id,
+            food_name,
+            description,
+            price,
+            quantity,
+            pickup_address
+        )
+        return redirect("/view_items")
+
+    # 2. If they just click "Update", we need to send them to an edit template
+    # We pass the listing_id so the template knows which item is being edited
+    return render_template("update_item.html", listing_id=listing_id)
+
 if __name__ == '__main__':
     app.run(debug=True)
-

@@ -159,6 +159,7 @@
                             </div>
 
                             <form class="reserve-row" action="/reserve" method="POST">
+                                <input type="hidden" name="user_id" value="{{ user.user_id }}">
                                 <input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
                                 <select name="quantity_reserved" aria-label="Quantity">
                                     {% for n in range(1, listing.quantity + 1) %}
