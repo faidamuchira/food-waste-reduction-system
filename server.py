@@ -86,6 +86,14 @@ def login():
             
     return render_template('login.html')
 
+@app.route("/logout")
+def logout():
+    #Remove all session data
+    session.clear()
+    
+    # Return the user to the login page
+    return redirect(url_for("login"))
+
 #============================ CUSTOMER  MAP ====================================
 @app.route('/dashboard')
 def dashboard():
@@ -204,20 +212,31 @@ def reserve():
 
 @app.route('/view_items')
 def view_items():
-        return render_template("dashbord_business.html") ###
+    # Ensure only logged-in businesses can access this page
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    
+    return render_template("dashbord_business.html") ###
 
    
 @app.route('/api/listings')
 def api_listings():
-        business_id = session.get('user_id')
+    # Ensure only logged-in businesses can access this page
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    business_id = session.get('user_id')
         # This is to ensure only authenticated users can  have access 
-        if business_id is None:
-            return redirect("/login")
-        items = view_food_items(business_id)
-        return jsonify(items)
+    if business_id is None:
+        return redirect("/login")
+    items = view_food_items(business_id)
+    return jsonify(items)
     
 @app.route('/add_items', methods=['GET', 'POST'])
 def add_items():
+    
+    # Ensure only logged-in businesses can access this page
+    if "user_id" not in session:
+        return redirect(url_for("login"))
 
     business_id = session.get("user_id", 1)
 
@@ -270,16 +289,19 @@ def add_items():
     
 @app.route ("/delete-items/<int:listing_id>")
 def delete_items_list(listing_id):
-        business_id = session.get('user_id', 1)
-        success, message = delete_item(
-            listing_id,
-            business_id
+    # Ensure only logged-in businesses can access this page
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    business_id = session.get('user_id', 1)
+    success, message = delete_item(
+        listing_id,
+        business_id
         )
         
-        if not success:
-            return message
+    if not success:
+        return message
         
-        return redirect ("/view_items")
+    return redirect ("/view_items")
 
 @app.route("/update-items/<int:listing_id>", methods=["GET", "POST"])
 def update_items_list(listing_id):
