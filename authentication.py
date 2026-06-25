@@ -29,9 +29,19 @@ def sign_up(full_name, email, password, role):
     for char in password:
         if char.isdigit():
             is_number = True
-    
+
     if not is_number:
         return False, "ERROR: Password must contain at least one number"
+
+    #check for at least one special character involve in password
+    special_characters = "!@#$%^&*()-_=+[{]};:'\",<.>/?\\|`~"
+    is_special = False
+    for char in password:
+        if char in special_characters():
+            is_special = True
+    if not is_special:
+        return False,  "ERROR: Password must contain at least one special character" 
+
     
     #Scramble the plain text password using our custom rolling function
     scrambled_password = hash_function(password)
