@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Food Listing</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            font-family:Arial, sans-serif;
+            background:#f5f9f3;
+        }
+
+        .container{
+            width:90%;
+            max-width:700px;
+            margin:40px auto;
+            background:white;
+            padding:30px;
+            border-radius:15px;
+            box-shadow:0 3px 10px rgba(0,0,0,.08);
+        }
+
+        h1{
+            text-align:center;
+            color:#234223;
+            margin-bottom:25px;
+        }
+
+        .box_row{
+            margin-bottom:18px;
+        }
+
+        label{
+            display:block;
+            font-weight:bold;
+            margin-bottom:6px;
+            color:#234223;
+        }
+
+        input,
+        textarea{
+            width:100%;
+            padding:10px;
+            border:1px solid #cfd8cf;
+            border-radius:8px;
+            font-size:15px;
+        }
+
+        textarea{
+            resize:vertical;
+        }
+
+        .row{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:15px;
+        }
+
+        .buttons{
+            display:flex;
+            justify-content:space-between;
+            margin-top:25px;
+        }
+
+        .btn{
+            padding:12px 24px;
+            border:none;
+            border-radius:20px;
+            text-decoration:none;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+        .save{
+            background:#2d5c2d;
+            color:white;
+        }
+
+        .save:hover{
+            background:#214421;
+        }
+
+        .cancel{
+            background:#cccccc;
+            color:black;
+        }
+
+        .cancel:hover{
+            background:#b5b5b5;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Update Food Listing</h1>
+
+<form method="POST">
+
+    <div class="box_row">
+        <label>Food Name</label>
+        <input
+            type="text"
+            name="food_name"
+            value="{{ listing.food_name }}"
+            required>
+    </div>
+
+    <div class="box_row">
+        <label>Description</label>
+        <textarea
+            name="description"
+            rows="3">{{ listing.description }}</textarea>
+    </div>
+
+    <div class="row">
+
+        <div class="box_row">
+            <label>Price (£)</label>
+            <input
+                type="number"
+                step="0.01"
+                min="0"
+                name="price"
+                value="{{ listing.price }}"
+                required>
+        </div>
+
+        <div class="box_row">
+            <label>Quantity</label>
+            <input
+                type="number"
+                min="1"
+                name="quantity"
+                value="{{ listing.quantity }}"
+                required>
+        </div>
+
+    </div>
+
+    <div class="box_row">
+        <label>Pickup Address</label>
+        <input
+            type="text"
+            name="pickup_address"
+            value="{{ listing.pickup_address }}"
+            required>
+    </div>
+
+    <div class="box_row">
+        <label>Available Until</label>
+        <input
+            type="datetime-local"
+            name="available_until"
+            value="{{ listing.available_until.strftime('%Y-%m-%dT%H:%M') if listing.available_until else '' }}">
+    </div>
+
+    <div class="buttons">
+
+        <button class="btn save" type="submit">
+            Save Changes
+        </button>
+
+        <a href="/view_items" class="btn cancel">
+            Cancel
+        </a>
+
+    </div>
+
+</form>
+
+</div>
+
+</body>
+</html>

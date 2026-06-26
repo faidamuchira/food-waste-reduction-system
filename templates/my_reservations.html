@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reservations</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            font-family:Arial, sans-serif;
+            background:#f5f9f3;
+            color:#2e4a2e;
+        }
+
+        /* Header */
+        .header{
+            background:#3a6e3aa9;
+            color:white;
+            text-align:center;
+            padding:30px;
+        }
+
+        .header h1{
+            font-size:2.5rem;
+        }
+
+        .header p{
+            margin-top:10px;
+            font-size:1.1rem;
+        }
+
+        /* Main container */
+        .container{
+            width:90%;
+            max-width:900px;
+            margin:40px auto;
+        }
+
+        /* Reservation Card */
+        .card{
+            background:white;
+            padding:20px;
+            border-radius:12px;
+            margin-bottom:20px;
+            box-shadow:0 3px 8px rgba(0,0,0,0.08);
+        }
+
+        .card h2{
+            color:#2e4a2e;
+            margin-bottom:15px;
+        }
+
+        .card p{
+            margin:8px 0;
+        }
+
+        /* Status badges */
+        .status{
+            padding:5px 12px;
+            border-radius:20px;
+            font-weight:bold;
+            color:white;
+        }
+
+        .pending{
+            background:#f0ad4e;
+        }
+
+        .collected{
+            background:#5cb85c;
+        }
+
+        .cancelled{
+            background:#d9534f;
+        }
+
+        /* Button */
+        .btn{
+            display:inline-block;
+            margin-top:15px;
+            padding:10px 20px;
+            background:#2e4a2e;
+            color:white;
+            text-decoration:none;
+            border-radius:8px;
+            font-weight:bold;
+        }
+
+        .btn:hover{
+            background:#3d5f3d;
+        }
+
+        /* Empty message */
+        .empty{
+            background:white;
+            padding:30px;
+            border-radius:12px;
+            text-align:center;
+            box-shadow:0 3px 8px rgba(0,0,0,0.08);
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <h1>My Reservations</h1>
+        <p>Track all the meals you've reserved.</p>
+    </div>
+
+    <div class="container">
+
+        {% if reservations %}
+
+            {% for reservation in reservations %}
+
+            <div class="card">
+
+                <h2>{{ reservation.food_name }}</h2>
+
+                <p><strong>Business:</strong> {{ reservation.business_name }}</p>
+
+                <p><strong>Price:</strong> £{{ reservation.price }}</p>
+
+                <p><strong>Quantity Reserved:</strong> {{ reservation.quantity_reserved }}</p>
+
+                <p><strong>Pickup Address:</strong> {{ reservation.pickup_address }}</p>
+
+                <p>
+                    <strong>Status:</strong>
+
+                    {% if reservation.status == "pending" %}
+                        <span class="status pending">🟡 Pending</span>
+
+                    {% elif reservation.status == "collected" %}
+                        <span class="status collected">🟢 Collected</span>
+
+                    {% elif reservation.status == "cancelled" %}
+                        <span class="status cancelled">🔴 Cancelled</span>
+
+                    {% else %}
+                        <span class="status pending">{{ reservation.status }}</span>
+
+                    {% endif %}
+                </p>
+
+                <p><strong>Reserved On:</strong> {{ reservation.created_at }}</p>
+
+                <a href="{{ url_for('reservations', user_id=user.user_id) }}" class="btn">
+                    Browse More Meals
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty">
+                <h2>No Reservations Yet</h2>
+                <br>
+                <p>You haven't reserved any meals yet.</p>
+                <br>
+
+                <a href="{{ url_for('reservations', user_id=user.user_id) }}" class="btn">
+                    Browse Available Meals
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+</html>
