@@ -173,6 +173,30 @@
             padding: 15px 0;
             text-align: center;
         }
+        /* Header layout */
+        .header-content {
+        width: 92%;
+        max-width: 1100px;
+        margin: 0 auto;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        }
+
+        /* Logout button */
+        .btn-logout {
+        background: #b22222;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-weight: bold;
+        }
+
+        .btn-logout:hover {
+        background: #8b0000;
+        }
   
     </style>
 </head>
@@ -181,8 +205,11 @@
 <!-- Inavbar homes section  -->
 <section class="home_section">
     <div class="container">
-    <h1>Food Wise</h1>
-    <p>Business Dashboard – manage your surplus food listings.</p>
+        <div>
+            <h1>Food Wise</h1>
+            <p>Business Dashboard – manage your surplus food listings.</p>
+        </div>
+        <a href="/logout" class="btn btn-delete_items">Logout</a>
     </div>
 </section>
 
@@ -224,7 +251,7 @@
 
         <div class="box_row">
             <label>Available Until</label>
-            <input type="datetime-local" name="available_until">
+            <input type="datetime-local" name="available_until" required>
         </div>
 
         <button type="submit" class="btn btn-primary">Add Listing</button>

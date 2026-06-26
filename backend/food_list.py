@@ -181,5 +181,32 @@ def update_items(listing_id, business_id, food_name, description, price, quantit
     finally:
         cursor.close()
         db.close()
+        
+# Get a single food listing by ID
+def get_food_item(listing_id, business_id):
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    try:
+        query = """
+        SELECT *
+        FROM food_listings
+        WHERE listing_id = %s
+        AND business_id = %s
+        """
+
+        cursor.execute(query, (listing_id, business_id))
+
+        listing = cursor.fetchone()
+
+        return listing
+
+    except Exception as e:
+        print("Unable to retrieve food listing:", e)
+        return None
+
+    finally:
+        cursor.close()
+        db.close()
     
 ####--

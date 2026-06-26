@@ -51,14 +51,14 @@ try:
         quantity INT NOT NULL,
         
          -- Address where customers collect the food
-        pickup_address VARCHAR(255),
+        pickup_address VARCHAR(255), -- noticed it should have been NOT null but the frontend captures it to prevent empty addresses 
                    
         -- Coordinates obtained from Google Maps API
         latitude DECIMAL(10,8),
         longitude DECIMAL(11,8),
         
         -- Deadline for reserving or collecting the food
-        available_until DATETIME,
+        available_until DATETIME, -- should be NOT NULL because expiry date is mandatory
         
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         
