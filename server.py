@@ -4,6 +4,7 @@ from backend.food_list import add_food_item, view_food_items, update_items, dele
 from authentication import sign_up, log_in
 from database.db_connection import get_db_connection
 from backend.maps import get_coordinates
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -320,6 +321,15 @@ def add_items():
             return "Unable to locate the pickup address."
 
         available_until = request.form.get("available_until") or None
+
+        if available_until:
+            try:
+                # Convert the form's HTML datetime-local string to a Python datetime object
+                input_time = datetime.fromisoformat(available_until)
+                if input_time < datetime.now():
+                    return "Validation Error: The 'available until' time cannot be in the past."
+            except ValueError:
+                return "Please enter a valid date and time format."
 
         success, message = add_food_item(
             business_id,
