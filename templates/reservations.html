@@ -130,18 +130,16 @@
                 {% endfor %}
             {% endwith %}
 
-            <!-- ===== MAP (moved here from feed.html) ===== -->
-            <div class="map-container">
-                <input id="search-input" type="text" placeholder="Search for a city, postcode, or address...">
-                <div id="map"></div>
-            </div>
+            
 
             <!-- ===== LISTING CARDS ===== -->
             <h3 class="section-title">All listings</h3>
             {% if listings %}
                 <div class="listings">
                     {% for listing in listings %}
-                        <div class="box">
+                        <div class="box"
+                            data-lat="{{ listing.latitude }}"
+                            data-lng="{{ listing.longitude }}">
                             <span class="business">{{ listing.business_name }}</span>
                             <h3 class="food-name">{{ listing.food_name }}</h3>
                             <p class="description">{{ listing.description }}</p>
@@ -176,57 +174,125 @@
             {% endif %}
         </div>
 
-        <!-- ===== MAP LOGIC (adapted from feed.html) ===== -->
-        <script>
-            // The same `listings` the cards use is handed to JavaScript as JSON.
-            const foodListings = {{ listings | tojson | safe }};
+        <!-- ===== MAP (moved here from feed.html) ===== -->
+            <div class="map-container">
+                <input id="search-input" type="text" placeholder="Search for a city, postcode, or address...">
+                <div id="map"></div>
+            </div>
+            
+    <script>
+    // The same listings used to create the cards are passed here.
+    const foodListings = {{ listings | tojson | safe }};
 
-            function initMap() {
-                const map = new google.maps.Map(document.getElementById("map"), {
-                    zoom: 6,
-                    center: { lat: 53.4830, lng: -2.2355 }, // near Manchester, shows UK + Ireland
+    function initMap() {
+
+        // Create the Google Map
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 6,
+            center: { lat: 53.4830, lng: -2.2355 } // UK & Ireland
+        });
+
+        // Store all markers and their info windows
+        const markers = [];
+
+        // Create one marker for every food listing
+        foodListings.forEach(item => {
+
+            // Skip listings that don't have coordinates
+            if (!item.latitude || !item.longitude) return;
+
+            const marker = new google.maps.Marker({
+                position: {
+                    lat: parseFloat(item.latitude),
+                    lng: parseFloat(item.longitude)
+                },
+                map: map,
+                title: item.food_name
+            });
+
+            // Information displayed when the marker is clicked
+            const infoWindow = new google.maps.InfoWindow({
+                content: `
+                    <div class="info-window">
+                        <h3>${item.food_name}</h3>
+                        <p><strong>Business:</strong> ${item.business_name}</p>
+                        <p><strong>Price:</strong> €${item.price}</p>
+                        <p><strong>Pickup:</strong> ${item.pickup_address}</p>
+                        <p><strong>${item.quantity} left</strong></p>
+                    </div>
+                `
+            });
+
+            marker.addListener("click", () => {
+                infoWindow.open({
+                    anchor: marker,
+                    map
                 });
+            });
 
-                // Drop a pin for every listing that has coordinates.
-                foodListings.forEach(item => {
-                    // Skip listings that have no latitude/longitude saved.
-                    if (!item.latitude || !item.longitude) return;
+            // Save the marker so we can find it later
+            markers.push({
+                marker: marker,
+                infoWindow: infoWindow,
+                listing: item
+            });
 
-                    const marker = new google.maps.Marker({
-                        position: { lat: parseFloat(item.latitude), lng: parseFloat(item.longitude) },
-                        map: map,
-                        title: item.food_name
+        });
+
+        // When a listing card is clicked, zoom to its location
+        document.querySelectorAll(".box").forEach(card => {
+
+            card.addEventListener("click", function () {
+
+                const lat = parseFloat(this.dataset.lat);
+                const lng = parseFloat(this.dataset.lng);
+
+                // Centre and zoom the map
+                map.setCenter({ lat, lng });
+                map.setZoom(16);
+
+                // Find the corresponding marker
+                const selected = markers.find(m =>
+                    parseFloat(m.listing.latitude) === lat &&
+                    parseFloat(m.listing.longitude) === lng
+                );
+
+                // Open its information window automatically
+                if (selected) {
+                    selected.infoWindow.open({
+                        anchor: selected.marker,
+                        map
                     });
+                }
 
-                    const contentString = `
-                        <div class="info-window">
-                            <h3>${item.food_name}</h3>
-                            <p><b>Business:</b> ${item.business_name}</p>
-                            <p><b>Price:</b> &euro;${item.price}</p>
-                            <p><b>Pickup:</b> ${item.pickup_address}</p>
-                            <p><b>${item.quantity} left</b></p>
-                        </div>
-                    `;
-                    const infoWindow = new google.maps.InfoWindow({ content: contentString });
-                    marker.addListener("click", () => infoWindow.open({ anchor: marker, map }));
-                });
+            });
 
-                // Search box with Google Places autocomplete.
-                const input = document.getElementById("search-input");
-                const autocomplete = new google.maps.places.Autocomplete(input);
-                autocomplete.bindTo("bounds", map);
-                autocomplete.addListener("place_changed", () => {
-                    const place = autocomplete.getPlace();
-                    if (!place.geometry || !place.geometry.location) return;
-                    if (place.geometry.viewport) {
-                        map.fitBounds(place.geometry.viewport);
-                    } else {
-                        map.setCenter(place.geometry.location);
-                        map.setZoom(14);
-                    }
-                });
+        });
+
+        // Google Places search box
+        const input = document.getElementById("search-input");
+
+        const autocomplete = new google.maps.places.Autocomplete(input);
+
+        autocomplete.bindTo("bounds", map);
+
+        autocomplete.addListener("place_changed", () => {
+
+            const place = autocomplete.getPlace();
+
+            if (!place.geometry || !place.geometry.location) return;
+
+            if (place.geometry.viewport) {
+                map.fitBounds(place.geometry.viewport);
+            } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(14);
             }
-        </script>
+
+        });
+
+    }
+</script>
 
         <!-- Loads Google Maps, then calls initMap. Replace the key with your own. -->
         <script async defer
