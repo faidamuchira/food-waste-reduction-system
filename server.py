@@ -3,8 +3,9 @@ from backend.food_list import add_food_item, view_food_items, update_items, dele
 # This imports exact sign_up and log_in functions
 from authentication import sign_up, log_in
 from database.db_connection import get_db_connection
-from backend.maps import get_coordinates
+from backend.maps import MapsClient
 from datetime import datetime
+
 
 app = Flask(__name__)
 
@@ -315,7 +316,8 @@ def add_items():
         pickup_address = request.form.get("pickup_address")
 
         # Convert the pickup address into coordinates
-        latitude, longitude = get_coordinates(pickup_address)
+        maps_client = MapsClient()
+        latitude, longitude = maps_client.get_coordinates(pickup_address)
 
         if latitude is None or longitude is None:
             return "Unable to locate the pickup address."
@@ -381,7 +383,8 @@ def update_items_list(listing_id):
         available_until = request.form.get("available_until")
         
         # Get fresh coordinates whenever the address changes
-        latitude, longitude = get_coordinates(pickup_address)
+        maps_client = MapsClient()
+        latitude, longitude = maps_client.get_coordinates(pickup_address)
         
         success, message = update_items(
             listing_id,
