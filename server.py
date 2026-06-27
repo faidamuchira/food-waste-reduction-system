@@ -5,6 +5,7 @@ from authentication import sign_up, log_in
 from database.db_connection import get_db_connection
 from backend.maps import MapsClient
 from datetime import datetime
+import mysql.connector
 
 
 app = Flask(__name__)
