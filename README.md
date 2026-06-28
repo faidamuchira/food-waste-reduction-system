@@ -270,9 +270,9 @@ Potential future enhancements include:
 
 ---
 
-# 👩‍💻 Team Members
+# 👩‍💻 Team Members and Log file links
 
-- Faith Daisy Muchira
+- Faith Daisy Muchira - https://docs.google.com/spreadsheets/d/1xvTETTLb8ECqd-IniqqL-Wda2Usae4rz/edit?usp=sharing&ouid=105359771751620605120&rtpof=true&sd=true
 - Lynette Charlene Mbabazi
 - Adnya Shinde
 - Nirvana Khan
