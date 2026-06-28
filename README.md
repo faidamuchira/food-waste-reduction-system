@@ -275,7 +275,7 @@ Potential future enhancements include:
 - Faith Daisy Muchira - https://docs.google.com/spreadsheets/d/1xvTETTLb8ECqd-IniqqL-Wda2Usae4rz/edit?usp=sharing&ouid=105359771751620605120&rtpof=true&sd=true
 - Lynette Charlene Mbabazi
 - Adnya Shinde
-- Nirvana Khan
+- Nirvana Khan - [Nirvana Khan - Project Activity Log .xlsx](https://github.com/user-attachments/files/29444156/Nirvana.Khan.-.Project.Activity.Log.xlsx)
 - Aza Aded
 
 ---
