@@ -109,12 +109,21 @@ class FoodItems:
         cursor= db.cursor()
 
         try:
-            query ="""
-            DELETE FROM food_listings
-            WHERE listing_id =%s
-            AND business_id =%s
-            """
-            cursor.execute(query, (listing_id, self.business_id))
+            cursor.execute(
+                "DELETE FROM reservations WHERE listing_id=%s",
+                (listing_id,))
+            #query ="""
+            #DELETE FROM food_listings
+            #WHERE listing_id =%s
+            #AND business_id =%s
+            #"""
+            cursor.execute("DELETE FROM food_listings WHERE listing_id=%s AND business_id=%s",
+                           (listing_id, self.business_id))
+            
+            if cursor.rowcount == 0:
+                return False, "Listing not found."
+        
+            #cursor.execute(query, (listing_id, self.business_id))
             db.commit()
 
             return True, "item deleted"
@@ -127,9 +136,8 @@ class FoodItems:
             cursor.close()
             db.close()
 
+    
     # Update the items in the list 
-
-
 
     def update_items(self, listing_id, food_name, description, price, quantity, pickup_address, available_until =None,latitude=None, longitude=None):
         db = get_db_connection()

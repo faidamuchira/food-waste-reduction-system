@@ -6,12 +6,16 @@ from database.db_connection import get_db_connection
 from backend.maps import MapsClient
 from datetime import datetime
 import mysql.connector
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 app = Flask(__name__)
 
 # secret key so Flask can securely remember user roles
-app.secret_key = 'food_wise_secret_session_key'
+app.secret_key = os.getenv("SECRET_KEY")
 
 def get_user_by_id(user_id):
     """Look a user up by id. Returns the row (dict) or None.
@@ -351,7 +355,6 @@ def add_items():
             return message
 
     return redirect("/view_items")
-    
 @app.route ("/delete-items/<int:listing_id>")
 def delete_items_list(listing_id):
     # Ensure only logged-in businesses can access this page
