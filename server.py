@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
-from backend.food_list import add_food_item, view_food_items, update_items, delete_item, get_food_item
+from backend.food_list import FoodItems
 # This imports exact sign_up and log_in functions
 from authentication import sign_up, log_in
 from database.db_connection import get_db_connection
@@ -282,7 +282,9 @@ def api_listings():
         # This is to ensure only authenticated users can  have access 
     if business_id is None:
         return redirect("/login")
-    items = view_food_items(business_id)
+    business_db = FoodItems(business_id)
+
+    items = business_db.view_food_items()
     return jsonify(items)
     
 @app.route('/add_items', methods=['GET', 'POST'])
@@ -333,9 +335,8 @@ def add_items():
                     return "Validation Error: The 'available until' time cannot be in the past."
             except ValueError:
                 return "Please enter a valid date and time format."
-
-        success, message = add_food_item(
-            business_id,
+        business_db = FoodItems(business_id)
+        success, message = business_db.add_food_item(
             food_name,
             price,
             quantity,
@@ -357,9 +358,9 @@ def delete_items_list(listing_id):
     if "user_id" not in session:
         return redirect(url_for("login"))
     business_id = session.get('user_id', 1)
-    success, message = delete_item(
+    business_db= FoodItems(business_id)
+    success, message = business_db.delete_item(
         listing_id,
-        business_id
         )
         
     if not success:
@@ -373,6 +374,7 @@ def update_items_list(listing_id):
     # Get the logged-in business
     business_id = session.get("user_id", 1)
 
+    business_db= FoodItems(business_id)
     # If the user clicks "Save Changes"
     if request.method == "POST":
 
@@ -387,9 +389,8 @@ def update_items_list(listing_id):
         maps_client = MapsClient()
         latitude, longitude = maps_client.get_coordinates(pickup_address)
         
-        success, message = update_items(
+        success, message = business_db.update_items(
             listing_id,
-            business_id,
             food_name,
             description,
             price,
@@ -408,7 +409,7 @@ def update_items_list(listing_id):
     # ---------- GET REQUEST ----------
 
     # Retrieve the current listing from the database
-    listing = get_food_item(listing_id, business_id)
+    listing = business_db.get_food_item(listing_id)
 
     if listing is None:
         return "Food listing not found."

@@ -4,216 +4,194 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Food Wise</title>
-
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-        html, body { height: 100%; }
-        body {
-            font-family: Arial;
-            background: #f5f9f3;
-            display: flex;
-            flex-direction: column;
-            color: black;
-        }
-        /* nav- homesection */
-        .home_section {
-            text-align: center;
-            background: #3a6e3aa9;
-            padding: 40px 0; 
-        }
-        .home_section h1 {
-            font-size: 3rem;
-            color: white;
-        }
-        .home_section p {
-            font-size: 1.5rem;
-            color: white;
-        }
-        /* main grid - seperate two columns */
-        .business_homepage {
-            flex: 1;
-            padding: 30px 0;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            width: 92%;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-        /* section 1 and 2 of gris */
-        .section_1,
-        .section_2 {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 3px 9px rgba(0,0,0,0.05);
-        }
-        .section_1 h2,
-        .section_2 h2 {
-            color: #1c3a1c;
-            /*border-bottom: 3px solid #b5d0b0; */
-            padding-bottom: 8px;
-            margin-bottom: 20px;
-        }
-        /*   */
-        .box_row {
-            margin-bottom: 15px;
-        }
-        .box_row label {
-            color: #2d4a2d;
-            display: block;
-            font-weight: bold;
-            font-size: 0.9rem;
-            margin-bottom: 3px;
-        }
-        .box_row input,
-        .box_row textarea {
-            width: 100%;
-            padding: 8px 16px;
-            border: 1px solid #c6dcc3;
-            border-radius: 6px;
-            font-size: 1rem;
-            background: #fcfdfb;
-        }
-        .box_row input:focus,
-        .box_row textarea:focus {
-            border-color: #6f9e6f;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(111,158,111,0.2);
-        }
-        /*padding*/
-        .row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        /* buttons*/
-        .btn {
-            display: inline-block;
-            padding: 8px 20px;
-            border: none;
-            border-radius: 20px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        .btn-primary {
-            background: #2e4a2e;
-            color: white;
-        }
-        .btn-primary:hover {
-            background: purple;
-        }
-        .btn-update_items {
-            background: #b5d0b0;
-            color: #1c3a1c;
-        }
-        .btn-update_items:hover {
-            background: #9ebf98;
-        }
-        .btn-delete_items {
-            background: #e6c4c4;
-            color: #5a2e2e;
-        }
-        .btn-delete_items :hover {
-            background: #dbb3b3;
-        }
-        /*viewing items */
-        .listing-cards {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            max-height: 50vh;
-            padding-right: 5px;
-        }
-        .listing-item {
-            background: #fcfdfb;
-            border: 1px solid #e3ede1;
-            border-radius: 10px;
-            padding: 15px 20px;
-        }
-        .item-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .price {
-            background: #d4e8d0;
-            padding: 2px 12px;
-            border-radius: 20px;
-            font-weight: bold;
-        }
-        .space {
-            display: flex;
-            gap: 20px;
-            font-size: 0.9rem;
-            color: #3d553d;
-            margin: 5px 0 10px 0;
-        }
-        .action_button {
-            display: flex;
-            gap: 10px;
-        }
-        /* No items message */
-        .no_listings {
-            color: #6f8a6f;
-            font-style: Arial;
-            text-align: center;
-        }
-        /* Footer section */
-        footer {
-            margin-top: auto;
-            background: #1c3a1c;
-            color: #d9e8d5;
-            padding: 15px 0;
-            text-align: center;
-        }
-        /* Header layout */
-        .header-content {
-        width: 92%;
-        max-width: 1100px;
-        margin: 0 auto;
+html, body { height: 100%; }
+body {
+    font-family: Arial;
+    background: #f5f9f3;
+    display: flex;
+    flex-direction: column;
+    color: black;
+}
+/* nav- homesection */
+.home_section {
+    text-align: center;
+    background: #1c3a1c;
+    padding: 40px 0; 
+}
+.home_section h1 {
+    font-size: 3rem;
+    color: white;
+}
+.home_section p {
+    font-size: 1.5rem;
+    color: white;
+}
+/* main grid - seperate two columns */
+.business_homepage {
+    flex: 1;
+    padding: 30px 0;
+}
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    width: 92%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+/* section 1 and 2 of gris */
+.section_1,
+.section_2 {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 3px 9px rgba(0,0,0,0.05);
+}
+.section_1 h2,
+.section_2 h2 {
+    color: #1c3a1c;
+    /*border-bottom: 3px solid #b5d0b0; */
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+}
+/*   */
+.box_row {
+    margin-bottom: 15px;
+}
+.box_row label {
+    color: #2d4a2d;
+    display: block;
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: 3px;
+}
+.box_row input,
+.box_row textarea {
+    width: 100%;
+    padding: 8px 16px;
+    border: 1px solid #c6dcc3;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: #fcfdfb;
+}
 
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        }
+.box_row textarea:focus {
+    border-color:black;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(111,158,111,0.2);
+}
+/*padding*/
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+/* buttons*/
+.btn {
+    display: inline-block;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+}
+.btn-primary {
+    background: #2e4a2e;
+    color: white;
+}
+.btn-primary:hover {
+    background: purple;
+}
+.btn-update_items {
+    background: #b5d0b0;
+    color: #1c3a1c;
+}
+.btn-update_items:hover {
+    background: #9ebf98;
+}
+.btn-delete_items {
+    background: #e6c4c4;
+    color: #5a2e2e;
+}
+.btn-delete_items :hover {
+    background: #dbb3b3;
+}
+/*viewing items */
+.listing-cards {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: 50vh;
+    padding-right: 5px;
+}
+.listing-item {
+    background: #fcfdfb;
+    border: 1px solid #e3ede1;
+    border-radius: 10px;
+    padding: 15px 20px;
+}
+.item-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        /* Logout button */
-        .btn-logout {
-        background: #b22222;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 20px;
-        text-decoration: none;
-        font-weight: bold;
-        }
+.listing-item .btn {
+    display: inline-block; 
+}
+/* Footer section */
+footer {
+    margin-top: auto;
+    background: #1c3a1c;
+    color: #d9e8d5;
+    padding: 15px 0;
+    text-align: center;
+}
+/* Header layout */
+.header-content {
+width: 92%;
+max-width: 1100px;
+margin: 0 auto;
 
-        .btn-logout:hover {
-        background: #8b0000;
-        }
-  
-    </style>
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+/* Logout button */
+.btn-logout {
+background: #b22222;
+color: white;
+padding: 10px 20px;
+border-radius: 20px;
+text-decoration: none;
+font-weight: bold;
+}
+
+.btn-logout:hover {
+background: #8b0000;
+}
+ </style>
+    <!--<link rel="stylesheet" href="/asset/css/dashboard.css"> -->
 </head>
 <body>
 
 <!-- Inavbar homes section  -->
 <section class="home_section">
     <div class="container">
-        <div>
-            <h1>Food Wise</h1>
-            <p>Business Dashboard – manage your surplus food listings.</p>
-        </div>
-        <a href="/logout" class="btn btn-delete_items">Logout</a>
+    <h1>Food Wise</h1>
+    <p> Food waste Reduction System, Manage your surplus food listings.</p>
     </div>
 </section>
 
-<!-- main page -->
+<!-- MAIN DASHBOARD -->
 <section class="business_homepage">
     <div class="grid">
 
@@ -235,7 +213,7 @@
         <div class="row">
             <div class="box_row">
             <label>Price (£)</label>
-            <input type="number" min ="0" step="0.01" name="price">
+            <input type="number" step="0.01" name="price">
             </div>
             <div class="box_row">
             <label>Quantity</label>
@@ -245,13 +223,14 @@
 
         <div class="box_row">
             <label>Pickup Address</label>
-            <input type="text" name="pickup_address" required>
+            <input type="text" name="pickup_address" required placeholder="LONDON">
         </div>
 
+        
 
         <div class="box_row">
             <label>Available Until</label>
-            <input type="datetime-local" name="available_until" required>
+            <input type="datetime-local" name="available_until">
         </div>
 
         <button type="submit" class="btn btn-primary">Add Listing</button>
@@ -260,9 +239,8 @@
 
 <!-- Rsection2 -->
     <div class="section_2">
-        <h2>Your Food Listings</h2>
+        <h2>Your Items</h2>
         <div id="listings-container">
-        <p class="no_listings">Loading...</p>
         </div>
     </div>
 
@@ -294,13 +272,13 @@
             <li class="listing-item">
             <div class="item-head">
                 <strong>${item.food_name}</strong>
-                <span class="price">£${item.price}</span>
+                <span>£${item.price}</span>
             </div>
             <div class ="space">
                 <span>Qty: ${item.quantity}</span>
                 <span>${item.pickup_address}</span>
             </div>
-            <div class="actions">
+            <div >
                 <a href="/update-items/${item.listing_id}" class="btn btn-update_items">Update</a>
                 <a href="/delete-items/${item.listing_id}" class="btn btn-delete_items" onclick="return confirm('Delete this listing?');">Delete</a>
             </div>
