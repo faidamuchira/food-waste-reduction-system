@@ -355,7 +355,21 @@ def add_items():
             return message
 
     return redirect("/view_items")
-    
+@app.route ("/delete-items/<int:listing_id>")
+def delete_items_list(listing_id):
+    # Ensure only logged-in businesses can access this page
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    business_id = session.get('user_id', 1)
+    business_db= FoodItems(business_id)
+    success, message = business_db.delete_item(
+        listing_id,
+        )
+        
+    if not success:
+        return message
+        
+    return redirect ("/view_items")
 
 @app.route("/update-items/<int:listing_id>", methods=["GET", "POST"])
 def update_items_list(listing_id):
