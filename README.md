@@ -273,7 +273,7 @@ Potential future enhancements include:
 # 👩‍💻 Team Members and Log file links
 
 - Faith Daisy Muchira - https://docs.google.com/spreadsheets/d/1xvTETTLb8ECqd-IniqqL-Wda2Usae4rz/edit?usp=sharing&ouid=105359771751620605120&rtpof=true&sd=true
-- Lynette Charlene Mbabazi
+- Lynette Charlene Mbabazi - https://docs.google.com/spreadsheets/d/1LNThy6icxrGdfHGezsbo-lUjnce3EwkZQfxrSFJXMLk/edit?usp=sharing
 - Adnya Shinde
 - Nirvana Khan
 - Aza Aded - https://docs.google.com/spreadsheets/d/1Gohptxz-kv6IxL4CXHsHhvcbTJSndqj3GpDdqPhfob0/edit?usp=sharing
