@@ -2,50 +2,41 @@ import os
 import requests
 from dotenv import load_dotenv
 
-#load env variables from the .env file
-load_dotenv()
+# Resolve path to root folder 
+current_folder = os.path.dirname(os.path.abspath(__file__))
+root_folder = os.path.dirname(current_folder)
+env_file_path = os.path.join(root_folder, '.env')
+load_dotenv(dotenv_path=env_file_path)
 
-# Google Maps API key stored securely in the .env file
-GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
+class MapsClient:
+    """A client to interact with the Google Maps API."""
+    
+    def __init__(self):
+        # Loading API key from env
+        self.api_key = os.getenv("GOOGLE_MAPS_API_KEY")
+        self.base_url = "https://maps.googleapis.com/maps/api/geocode/json"
 
-def get_coordinates(address):
-    """
-    Convert a pickup address into latitude and longitude
-    using the Google Maps Geocoding API.
+    def get_coordinates(self, address):
+        """Convert a pickup address into latitude and longitude."""
 
-    Args:
-        address (str): The pickup address entered by the business.
+        # Params required by Geocoding API
+        params = {
+            "address": address,
+            "key": self.api_key
+        }
 
-    Returns:
-        tuple:
-            (latitude, longitude) if the address is found,
-            otherwise (None, None).
-    """
+        try:
+            response = requests.get(self.base_url, params=params)
+            response.raise_for_status()
+            data = response.json()
 
-    url = "https://maps.googleapis.com/maps/api/geocode/json"
+            if data.get("status") == "OK":
+                location = data["results"][0]["geometry"]["location"]
+                return location["lat"], location["lng"]
+                
+            return None, None
 
-    params = {
-        "address": address,
-        "key": GOOGLE_MAPS_API_KEY
-    }
-
-    try:
-        response = requests.get(url, params=params)
-        response.raise_for_status()
-
-        data = response.json()
-
-        if data["status"] == "OK":
-
-            location = data["results"][0]["geometry"]["location"]
-
-            latitude = location["lat"]
-            longitude = location["lng"]
-
-            return latitude, longitude
-
-        return None, None
-
-    except requests.exceptions.RequestException as e:
-        print(f"Google Maps API error: {e}")
-        return None, None
+        except requests.exceptions.RequestException as e:
+            # Catch network errors 
+            print(f"Google Maps API error: {e}")
+            return None, None
