@@ -1,3 +1,4 @@
+[FoodWise Project report - Group 4.pdf](https://github.com/user-attachments/files/29443689/FoodWise.Project.report.-.Group.4.pdf)
 # 🥗 FOOD WISE 
 ## Food Waste Reduction System
 
